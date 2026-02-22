@@ -5,6 +5,12 @@ const SITE_URL = process.env.SITE_URL || "http://localhost:5173";
 // ── Admin registration ────────────────────────────────────────────────────────
 const register = async (req, res) => {
   try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ 
+        error: "Server Configuration Error: SUPABASE_SERVICE_ROLE_KEY is missing. Registration cannot bypass RLS." 
+      });
+    }
+
     const { name, email, password } = req.body;
     if (!name || !email || !password)
       return res
@@ -12,17 +18,15 @@ const register = async (req, res) => {
         .json({ error: "Name, email, and password are required" });
 
     // Block duplicate email registrations early
-    const { data: existingOrg } = await supabase
+    const { data: existingOrg } = await supabaseAdmin
       .from("organizations")
       .select("id")
       .eq("email", email)
       .single();
     if (existingOrg)
-      return res
-        .status(409)
-        .json({
-          error: "An account with this email already exists. Please sign in.",
-        });
+      return res.status(409).json({
+        error: "An account with this email already exists. Please sign in.",
+      });
 
     let userId;
 
@@ -53,7 +57,7 @@ const register = async (req, res) => {
       return res.status(500).json({ error: "Failed to create user" });
 
     // Create org record — conflict on primary key (id) only
-    const { error: orgError } = await supabase
+    const { error: orgError } = await supabaseAdmin
       .from("organizations")
       .upsert(
         { id: userId, name, email, password_hash: "managed_by_supabase_auth" },
@@ -67,7 +71,7 @@ const register = async (req, res) => {
     }
 
     // Create admin profile
-    const { error: profileError } = await supabase
+    const { error: profileError } = await supabaseAdmin
       .from("user_profiles")
       .upsert(
         { id: userId, org_id: userId, role: "admin" },
@@ -84,13 +88,11 @@ const register = async (req, res) => {
     const { data: signInData, error: signInError } =
       await supabase.auth.signInWithPassword({ email, password });
     if (signInError) {
-      return res
-        .status(201)
-        .json({
-          user: { id: userId, email },
-          session: null,
-          requiresLogin: true,
-        });
+      return res.status(201).json({
+        user: { id: userId, email },
+        session: null,
+        requiresLogin: true,
+      });
     }
 
     res
@@ -139,7 +141,7 @@ const inviteEmployee = async (req, res) => {
     const invitedBy = req.user.id;
 
     // Check if already invited
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseAdmin
       .from("invitations")
       .select("id, status")
       .match({ org_id: orgId, email })
@@ -164,7 +166,7 @@ const inviteEmployee = async (req, res) => {
       return res.status(400).json({ error: inviteError.message });
 
     // Record the invitation
-    const { data: invitation, error: dbError } = await supabase
+    const { data: invitation, error: dbError } = await supabaseAdmin
       .from("invitations")
       .insert({
         org_id: orgId,
@@ -190,7 +192,7 @@ const completeInvite = async (req, res) => {
     const userEmail = req.user.email;
 
     // Find the pending invitation for this email
-    const { data: invitation, error: inviteError } = await supabase
+    const { data: invitation, error: inviteError } = await supabaseAdmin
       .from("invitations")
       .select("*")
       .eq("email", userEmail)
@@ -206,7 +208,7 @@ const completeInvite = async (req, res) => {
     const displayName = req.body.name || userEmail.split("@")[0];
 
     // Create employee record
-    const { data: employee, error: empError } = await supabase
+    const { data: employee, error: empError } = await supabaseAdmin
       .from("employees")
       .insert({
         org_id: orgId,
@@ -219,7 +221,7 @@ const completeInvite = async (req, res) => {
     if (empError) throw empError;
 
     // Create user_profile as employee
-    const { error: profileError } = await supabase
+    const { error: profileError } = await supabaseAdmin
       .from("user_profiles")
       .upsert({
         id: userId,
@@ -230,7 +232,7 @@ const completeInvite = async (req, res) => {
     if (profileError) throw profileError;
 
     // Mark invite as accepted
-    await supabase
+    await supabaseAdmin
       .from("invitations")
       .update({ status: "accepted" })
       .eq("id", invitation.id);
@@ -262,7 +264,7 @@ const updateProfile = async (req, res) => {
       preferred_domain,
     } = req.body;
 
-    const { data: profile, error } = await supabase
+    const { data: profile, error } = await supabaseAdmin
       .from("user_profiles")
       .update({
         full_name,

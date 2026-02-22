@@ -1,4 +1,4 @@
-const { supabase } = require("../db");
+const { supabaseAdmin } = require("../db");
 
 // Get the org_id for any user (admin or employee)
 const getOrgId = (req) => req.userProfile?.org_id || null;
@@ -9,7 +9,7 @@ exports.getTasks = async (req, res) => {
     if (!orgId) return res.status(403).json({ error: "No org context" });
 
     const isEmployee = req.userProfile?.role === "employee";
-    let query = supabase
+    let query = supabaseAdmin
       .from("tasks")
       .select(`*, employees ( name, role, department )`)
       .eq("org_id", orgId)
@@ -40,7 +40,7 @@ exports.addTask = async (req, res) => {
         .json({ error: "Title and employee_id are required" });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("tasks")
       .insert([
         { org_id: orgId, employee_id, title, description, status: "Assigned" },
@@ -69,7 +69,7 @@ exports.updateTaskStatus = async (req, res) => {
 
     // Build match query — employees can only update their own tasks
     const isEmployee = req.userProfile?.role === "employee";
-    let matchQuery = supabase
+    let matchQuery = supabaseAdmin
       .from("tasks")
       .select("*")
       .match({ id: taskId, org_id: orgId });
@@ -91,7 +91,7 @@ exports.updateTaskStatus = async (req, res) => {
     if (status === "Completed" && existingTask.status !== "Completed") {
       updates.completed_at = new Date().toISOString();
 
-      const { data: emp } = await supabase
+      const { data: emp } = await supabaseAdmin
         .from("employees")
         .select("productivity_score")
         .eq("id", existingTask.employee_id)
@@ -109,13 +109,13 @@ exports.updateTaskStatus = async (req, res) => {
 
       newScore = currentScore + pointsEarned;
 
-      await supabase
+      await supabaseAdmin
         .from("employees")
         .update({ productivity_score: newScore })
         .eq("id", existingTask.employee_id);
     }
 
-    const { data: updatedTask, error: updateError } = await supabase
+    const { data: updatedTask, error: updateError } = await supabaseAdmin
       .from("tasks")
       .update(updates)
       .match({ id: taskId, org_id: orgId })

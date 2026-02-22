@@ -1,4 +1,4 @@
-const { supabase } = require("../db");
+const { supabaseAdmin } = require("../db");
 
 const getOrgId = (req) => req.userProfile?.org_id || null;
 
@@ -7,7 +7,7 @@ exports.getEmployees = async (req, res) => {
     const orgId = getOrgId(req);
     if (!orgId) return res.status(403).json({ error: "No org context" });
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("employees")
       .select("*")
       .eq("org_id", orgId)
@@ -32,7 +32,7 @@ exports.addEmployee = async (req, res) => {
         .json({ error: "Name, role, and department are required" });
     }
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("employees")
       .insert([
         {
@@ -62,7 +62,7 @@ exports.updateEmployee = async (req, res) => {
     const updates = req.body;
 
     // Prevent cross-org updates
-    const { data: existing, error: findError } = await supabase
+    const { data: existing, error: findError } = await supabaseAdmin
       .from("employees")
       .select("id")
       .match({ id: employeeId, org_id: orgId })
@@ -71,7 +71,7 @@ exports.updateEmployee = async (req, res) => {
     if (findError || !existing)
       return res.status(404).json({ error: "Employee not found" });
 
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("employees")
       .update(updates)
       .match({ id: employeeId, org_id: orgId })
@@ -91,7 +91,7 @@ exports.deleteEmployee = async (req, res) => {
     if (!orgId) return res.status(403).json({ error: "No org context" });
     const employeeId = req.params.id;
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from("employees")
       .delete()
       .match({ id: employeeId, org_id: orgId });
