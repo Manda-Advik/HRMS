@@ -12,17 +12,15 @@ const register = async (req, res) => {
         .json({ error: "Name, email, and password are required" });
 
     // Block duplicate email registrations early
-    const { data: existingOrg } = await supabase
+    const { data: existingOrg } = await supabaseAdmin
       .from("organizations")
       .select("id")
       .eq("email", email)
       .single();
     if (existingOrg)
-      return res
-        .status(409)
-        .json({
-          error: "An account with this email already exists. Please sign in.",
-        });
+      return res.status(409).json({
+        error: "An account with this email already exists. Please sign in.",
+      });
 
     let userId;
 
@@ -53,7 +51,7 @@ const register = async (req, res) => {
       return res.status(500).json({ error: "Failed to create user" });
 
     // Create org record — conflict on primary key (id) only
-    const { error: orgError } = await supabase
+    const { error: orgError } = await (supabaseAdmin || supabase)
       .from("organizations")
       .upsert(
         { id: userId, name, email, password_hash: "managed_by_supabase_auth" },
@@ -67,7 +65,7 @@ const register = async (req, res) => {
     }
 
     // Create admin profile
-    const { error: profileError } = await supabase
+    const { error: profileError } = await (supabaseAdmin || supabase)
       .from("user_profiles")
       .upsert(
         { id: userId, org_id: userId, role: "admin" },
@@ -84,13 +82,11 @@ const register = async (req, res) => {
     const { data: signInData, error: signInError } =
       await supabase.auth.signInWithPassword({ email, password });
     if (signInError) {
-      return res
-        .status(201)
-        .json({
-          user: { id: userId, email },
-          session: null,
-          requiresLogin: true,
-        });
+      return res.status(201).json({
+        user: { id: userId, email },
+        session: null,
+        requiresLogin: true,
+      });
     }
 
     res
