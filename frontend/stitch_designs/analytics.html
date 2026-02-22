@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Insights &amp; Analytics - Acme HRMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1c6bf2",
+                        "primary-content": "#ffffff",
+                        "primary-dark": "#1550b5",
+                        "primary-light": "#e8f0fe",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                    },
+                    boxShadow: {
+                        "soft": "0 2px 10px rgba(0, 0, 0, 0.03)",
+                        "card": "0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)"
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar for cleanliness */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        
+        .chart-grid-line {
+            stroke: #e2e8f0;
+            stroke-dasharray: 4;
+        }
+        
+        .radar-polygon {
+            fill: rgba(28, 107, 242, 0.1);
+            stroke: #1c6bf2;
+            stroke-width: 2;
+        }
+        
+        .radar-bg-circles {
+            fill: none;
+            stroke: #e2e8f0;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased selection:bg-primary/20">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="hidden w-64 flex-col border-r border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800 lg:flex z-20">
+<div class="flex h-16 items-center gap-3 px-6 border-b border-slate-100 dark:border-slate-800">
+<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-white">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+</div>
+<div class="flex flex-col">
+<h1 class="text-sm font-bold text-slate-900 dark:text-white">Acme HRMS</h1>
+<p class="text-xs text-slate-500">Admin Console</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto px-4 py-6 space-y-1">
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 transition-colors hover:bg-slate-50 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 transition-colors hover:bg-slate-50 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">group</span>
+<span class="text-sm font-medium">Employees</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 transition-colors hover:bg-slate-50 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">person_add</span>
+<span class="text-sm font-medium">Recruitment</span>
+</a>
+<div class="pt-4 pb-2">
+<p class="px-3 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">Analytics</p>
+</div>
+<a class="flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2.5 text-primary transition-colors dark:bg-primary/20 dark:text-primary-light" href="#">
+<span class="material-symbols-outlined text-[20px] fill-1">insights</span>
+<span class="text-sm font-semibold">AI Insights</span>
+</a>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 transition-colors hover:bg-slate-50 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">description</span>
+<span class="text-sm font-medium">Reports</span>
+</a>
+<div class="pt-4 pb-2">
+<p class="px-3 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">System</p>
+</div>
+<a class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 transition-colors hover:bg-slate-50 hover:text-primary dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-100 dark:border-slate-800">
+<button class="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white transition-all">
+<span class="material-symbols-outlined text-[18px]">logout</span>
+<span>Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark relative">
+<!-- Header -->
+<header class="sticky top-0 z-10 glass-effect border-b border-slate-200/50 dark:border-slate-800/50 px-8 py-4">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white">AI Insights &amp; Analytics</h2>
+<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Real-time workforce intelligence and predictive modeling.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<button class="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span>Last 30 Days</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+</div>
+<button class="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-primary-dark transition-all">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Export Report</span>
+</button>
+</div>
+</div>
+</header>
+<div class="p-8 space-y-8 max-w-[1600px] mx-auto">
+<!-- KPI Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="relative overflow-hidden rounded-xl bg-white p-6 shadow-soft dark:bg-slate-800 border border-slate-100 dark:border-slate-700 group hover:border-primary/30 transition-colors">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Employees</p>
+<h3 class="mt-2 text-3xl font-bold text-slate-900 dark:text-white">1,240</h3>
+</div>
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20">
+<span class="material-symbols-outlined">groups</span>
+</div>
+</div>
+<div class="mt-4 flex items-center text-sm">
+<span class="flex items-center text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_up</span>
+                                +5%
+                            </span>
+<span class="ml-2 text-slate-400 dark:text-slate-500">vs last month</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="relative overflow-hidden rounded-xl bg-white p-6 shadow-soft dark:bg-slate-800 border border-slate-100 dark:border-slate-700 group hover:border-primary/30 transition-colors">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Avg. Productivity</p>
+<h3 class="mt-2 text-3xl font-bold text-slate-900 dark:text-white">88%</h3>
+</div>
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+</div>
+<div class="mt-4 flex items-center text-sm">
+<span class="flex items-center text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_up</span>
+                                +2.4%
+                            </span>
+<span class="ml-2 text-slate-400 dark:text-slate-500">vs last month</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="relative overflow-hidden rounded-xl bg-white p-6 shadow-soft dark:bg-slate-800 border border-slate-100 dark:border-slate-700 group hover:border-primary/30 transition-colors">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Retention Risk</p>
+<h3 class="mt-2 text-3xl font-bold text-slate-900 dark:text-white">Low</h3>
+</div>
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400">
+<span class="material-symbols-outlined">heart_broken</span>
+</div>
+</div>
+<div class="mt-4 flex items-center text-sm">
+<span class="flex items-center text-rose-600 dark:text-rose-400 font-semibold bg-rose-50 dark:bg-rose-900/30 px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_down</span>
+                                -1.2%
+                            </span>
+<span class="ml-2 text-slate-400 dark:text-slate-500">vs last month</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="relative overflow-hidden rounded-xl bg-white p-6 shadow-soft dark:bg-slate-800 border border-slate-100 dark:border-slate-700 group hover:border-primary/30 transition-colors">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Skill Gap Score</p>
+<h3 class="mt-2 text-3xl font-bold text-slate-900 dark:text-white">12%</h3>
+</div>
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
+<span class="material-symbols-outlined">warning</span>
+</div>
+</div>
+<div class="mt-4 flex items-center text-sm">
+<span class="flex items-center text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[16px] mr-1">trending_down</span>
+                                -3%
+                            </span>
+<span class="ml-2 text-slate-400 dark:text-slate-500">gap closing</span>
+</div>
+</div>
+</div>
+<!-- Main Chart Section -->
+<section class="rounded-xl bg-white p-6 shadow-soft dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+<div>
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">AI Performance Trends</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400">Productivity vs. Engagement (Last 6 Months)</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="h-3 w-3 rounded-full bg-primary"></span>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Productivity</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="h-3 w-3 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Engagement</span>
+</div>
+</div>
+</div>
+<div class="relative h-[300px] w-full">
+<!-- Custom CSS Area Chart Representation -->
+<svg class="h-full w-full overflow-visible" preserveaspectratio="none" viewbox="0 0 1000 300">
+<!-- Grid Lines -->
+<line class="chart-grid-line" stroke-width="1" x1="0" x2="1000" y1="250" y2="250"></line>
+<line class="chart-grid-line" stroke-width="1" x1="0" x2="1000" y1="190" y2="190"></line>
+<line class="chart-grid-line" stroke-width="1" x1="0" x2="1000" y1="130" y2="130"></line>
+<line class="chart-grid-line" stroke-width="1" x1="0" x2="1000" y1="70" y2="70"></line>
+<defs>
+<lineargradient id="gradientPrimary" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#1c6bf2" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#1c6bf2" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Area Path (Productivity) -->
+<path d="M0 200 C 150 200, 150 120, 300 130 C 450 140, 450 80, 600 60 C 750 40, 750 90, 900 70 L 1000 50 V 300 H 0 Z" fill="url(#gradientPrimary)"></path>
+<!-- Line Path (Productivity) -->
+<path d="M0 200 C 150 200, 150 120, 300 130 C 450 140, 450 80, 600 60 C 750 40, 750 90, 900 70 L 1000 50" fill="none" stroke="#1c6bf2" stroke-linecap="round" stroke-width="3"></path>
+<!-- Line Path (Engagement - Comparison) -->
+<path d="M0 230 C 150 230, 150 180, 300 190 C 450 200, 450 150, 600 140 C 750 130, 750 160, 900 150 L 1000 145" fill="none" stroke="#94a3b8" stroke-dasharray="6" stroke-linecap="round" stroke-width="2"></path>
+<!-- Data Point Tooltip Indicator -->
+<circle cx="600" cy="60" fill="#1c6bf2" r="6" stroke="white" stroke-width="3"></circle>
+<g transform="translate(580, 10)">
+<rect fill="#1e293b" height="30" rx="4" width="60"></rect>
+<text fill="white" font-size="12" font-weight="bold" text-anchor="middle" x="30" y="20">92%</text>
+</g>
+</svg>
+<!-- X-Axis Labels -->
+<div class="flex justify-between px-2 pt-4 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+<span>Oct 23</span>
+<span>Nov 23</span>
+<span>Dec 23</span>
+<span>Jan 24</span>
+<span>Feb 24</span>
+<span>Mar 24</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Skill Gap Analysis (Left Col) -->
+<section class="lg:col-span-5 rounded-xl bg-white p-6 shadow-soft dark:bg-slate-800 border border-slate-100 dark:border-slate-700 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">Skill Gap Analysis</h3>
+<button class="text-primary text-sm font-medium hover:underline">Details</button>
+</div>
+<div class="flex-1 flex items-center justify-center relative min-h-[350px]">
+<!-- SVG Radar Chart Simulation -->
+<svg class="overflow-visible" height="320" viewbox="0 0 200 200" width="320">
+<!-- Background Circles -->
+<circle class="radar-bg-circles" cx="100" cy="100" r="20"></circle>
+<circle class="radar-bg-circles" cx="100" cy="100" r="40"></circle>
+<circle class="radar-bg-circles" cx="100" cy="100" r="60"></circle>
+<circle class="radar-bg-circles" cx="100" cy="100" r="80"></circle>
+<circle class="radar-bg-circles" cx="100" cy="100" r="100"></circle>
+<!-- Axis Lines -->
+<line stroke="#e2e8f0" x1="100" x2="100" y1="0" y2="200"></line>
+<line stroke="#e2e8f0" x1="13" x2="187" y1="50" y2="150"></line>
+<line stroke="#e2e8f0" x1="13" x2="187" y1="150" y2="50"></line>
+<!-- Data Polygon (Current Skills - Gray) -->
+<polygon fill="rgba(148, 163, 184, 0.2)" points="100,50 160,80 140,160 60,160 40,80" stroke="#94a3b8" stroke-width="2"></polygon>
+<!-- Data Polygon (Target Skills - Blue) -->
+<polygon class="radar-polygon" points="100,20 175,60 160,170 40,170 25,60"></polygon>
+<!-- Labels -->
+<text class="text-[10px] fill-slate-500 font-medium" text-anchor="middle" x="100" y="-10">Leadership</text>
+<text class="text-[10px] fill-slate-500 font-medium" text-anchor="start" x="200" y="50">Python</text>
+<text class="text-[10px] fill-slate-500 font-medium" text-anchor="start" x="180" y="180">Data</text>
+<text class="text-[10px] fill-slate-500 font-medium" text-anchor="end" x="20" y="180">Project Mgmt</text>
+<text class="text-[10px] fill-slate-500 font-medium" text-anchor="end" x="0" y="50">Communication</text>
+</svg>
+</div>
+<div class="mt-6 flex justify-center gap-6">
+<div class="flex items-center gap-2">
+<span class="h-3 w-3 rounded-full border-2 border-primary bg-primary/10"></span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300">Required Level</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="h-3 w-3 rounded-full border-2 border-slate-400 bg-slate-200 dark:bg-slate-700"></span>
+<span class="text-xs font-medium text-slate-600 dark:text-slate-300">Current Level</span>
+</div>
+</div>
+</section>
+<!-- Recommendations (Right Col) -->
+<section class="lg:col-span-7 space-y-4">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-lg font-bold text-slate-900 dark:text-white">AI Recommendations</h3>
+<span class="inline-flex items-center rounded-md bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 ring-1 ring-inset ring-purple-700/10">3 New Actions</span>
+</div>
+<!-- Card 1: High Priority -->
+<div class="group relative flex flex-col gap-4 rounded-xl bg-white p-5 shadow-soft dark:bg-slate-800 border-l-4 border-l-rose-500 border-y border-r border-slate-100 dark:border-slate-700 hover:shadow-card transition-all">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-rose-600 dark:bg-rose-900/20">
+<span class="material-symbols-outlined">person_alert</span>
+</div>
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Potential Churn Risk Detected</h4>
+<p class="mt-1 text-sm text-slate-600 dark:text-slate-400 max-w-lg">
+                                            Predictive analysis indicates 3 senior developers in the Backend Team are showing signs of burnout (high overtime, low engagement).
+                                        </p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pl-[64px]">
+<span class="text-xs font-semibold text-rose-600 bg-rose-50 dark:bg-rose-900/30 dark:text-rose-300 px-2 py-1 rounded">High Priority</span>
+<button class="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200">
+                                    Schedule 1:1 Review
+                                </button>
+</div>
+</div>
+<!-- Card 2: Medium Priority -->
+<div class="group relative flex flex-col gap-4 rounded-xl bg-white p-5 shadow-soft dark:bg-slate-800 border-l-4 border-l-amber-500 border-y border-r border-slate-100 dark:border-slate-700 hover:shadow-card transition-all">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-amber-50 text-amber-600 dark:bg-amber-900/20">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Training Opportunity: UX Design</h4>
+<p class="mt-1 text-sm text-slate-600 dark:text-slate-400 max-w-lg">
+                                            The Product Design team shows a 15% gap in Figma proficiency compared to industry standards.
+                                        </p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pl-[64px]">
+<span class="text-xs font-semibold text-amber-600 bg-amber-50 dark:bg-amber-900/30 dark:text-amber-300 px-2 py-1 rounded">Medium Priority</span>
+<div class="flex gap-3">
+<button class="text-sm font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Dismiss</button>
+<button class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-white">
+                                        Assign Workshop
+                                    </button>
+</div>
+</div>
+</div>
+<!-- Card 3: Optimization -->
+<div class="group relative flex flex-col gap-4 rounded-xl bg-white p-5 shadow-soft dark:bg-slate-800 border-l-4 border-l-primary border-y border-r border-slate-100 dark:border-slate-700 hover:shadow-card transition-all">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary dark:bg-primary/20">
+<span class="material-symbols-outlined">diversity_3</span>
+</div>
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Team Composition Suggestion</h4>
+<p class="mt-1 text-sm text-slate-600 dark:text-slate-400 max-w-lg">
+                                            Project "Alpha" has an imbalance of Junior vs Senior staff. Adding 1 Senior Engineer could boost velocity by 12%.
+                                        </p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pl-[64px]">
+<span class="text-xs font-semibold text-primary bg-primary/10 dark:bg-primary/20 dark:text-primary-light px-2 py-1 rounded">Optimization</span>
+<button class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-700 dark:text-white">
+                                    View Team Details
+                                </button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+</body></html>

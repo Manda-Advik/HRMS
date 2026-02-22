@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Employee Profile - AI HRMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1c6bf2",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101722",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e293b",
+                        "text-primary-light": "#0f172a",
+                        "text-primary-dark": "#f1f5f9",
+                        "text-secondary-light": "#64748b",
+                        "text-secondary-dark": "#94a3b8",
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#334155",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #475569; 
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display antialiased text-text-primary-light dark:text-text-primary-dark transition-colors duration-200">
+<div class="layout-container flex h-full grow flex-col max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap gap-2 py-4 mb-4">
+<a class="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary transition-colors text-sm font-medium leading-normal flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+                Dashboard
+            </a>
+<span class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium leading-normal">/</span>
+<a class="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Employees</a>
+<span class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium leading-normal">/</span>
+<span class="text-primary font-semibold text-sm leading-normal">Profile</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-start">
+<!-- Left Column: Profile Card -->
+<div class="col-span-1 lg:col-span-4 xl:col-span-3 flex flex-col gap-6">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden">
+<!-- Avatar & Basic Info -->
+<div class="p-6 flex flex-col items-center border-b border-border-light dark:border-border-dark bg-gradient-to-b from-primary/5 to-transparent">
+<div class="relative group">
+<div class="bg-center bg-no-repeat bg-cover rounded-full h-32 w-32 border-4 border-surface-light dark:border-surface-dark shadow-md" data-alt="Portrait of a professional man wearing a suit" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBFu-nES4Ic3D86iF5M76tcNUub3W6OSaqBVwqaRTUZnedLR27v8bm_jpzZICh5bjHIkJxpS9-CDuVNFqEqzbkMHShLpxOOEI44MX7Y61B9JLvc_IZRoSPkhP7ZoyeiyOh1Q6YFZGVVGJa7ukjxkThDk3aJFpvHymp2UgYOgCGAcBFqbiHmM-mM0sSz4gg2dR81nWqc-DbIabrRcMABlB4fcymhA6Gj1T7e_EXJYnaG1DC6h8pY529_iUhcM5xLtKi3oIKM3GRMnIA");'></div>
+<div class="absolute bottom-2 right-2 h-4 w-4 bg-green-500 border-2 border-surface-light dark:border-surface-dark rounded-full" title="Online"></div>
+</div>
+<div class="mt-4 text-center">
+<h2 class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark">Alex Johnson</h2>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium mt-1">Senior Data Scientist</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-xs mt-1 bg-background-light dark:bg-background-dark py-1 px-3 rounded-full inline-block">ID: EMP-2024-892</p>
+</div>
+<div class="flex w-full gap-3 mt-6">
+<button class="flex-1 cursor-pointer items-center justify-center rounded-lg h-9 px-3 bg-surface-light dark:bg-background-dark border border-border-light dark:border-border-dark hover:bg-background-light dark:hover:bg-gray-800 text-text-primary-light dark:text-text-primary-dark text-sm font-semibold transition-colors shadow-sm">
+                                Message
+                            </button>
+<button class="flex-1 cursor-pointer items-center justify-center rounded-lg h-9 px-3 bg-primary hover:bg-blue-600 text-white text-sm font-semibold transition-colors shadow-sm shadow-blue-500/20">
+                                Edit Profile
+                            </button>
+</div>
+</div>
+<!-- Contact Details -->
+<div class="p-6 flex flex-col gap-4">
+<div class="flex items-center gap-3 text-sm">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Email</span>
+<span class="text-text-primary-light dark:text-text-primary-dark font-medium truncate">alex.j@company.com</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">call</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Phone</span>
+<span class="text-text-primary-light dark:text-text-primary-dark font-medium">+1 555-0123</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-sm">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Location</span>
+<span class="text-text-primary-light dark:text-text-primary-dark font-medium">New York, USA</span>
+</div>
+</div>
+</div>
+<!-- Wallet Address Section -->
+<div class="p-6 border-t border-border-light dark:border-border-dark bg-background-light/50 dark:bg-background-dark/30">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-[20px]">account_balance_wallet</span>
+<span class="text-sm font-bold text-text-primary-light dark:text-text-primary-dark">Payroll Wallet</span>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark p-3 rounded-lg border border-border-light dark:border-border-dark flex items-center justify-between shadow-sm group hover:border-primary/50 transition-colors">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-text-secondary-light dark:text-text-secondary-dark font-semibold">ETH Address</span>
+<span class="text-sm font-mono text-text-primary-light dark:text-text-primary-dark font-medium">0x71C...9A2</span>
+</div>
+<button class="text-text-secondary-light hover:text-primary transition-colors p-1.5 rounded hover:bg-primary/10" title="Copy Address">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Stats Widget -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6">
+<h3 class="text-sm font-bold text-text-primary-light dark:text-text-primary-dark mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-green-500 text-[18px]">trending_up</span>
+                        Performance Trend
+                    </h3>
+<div class="relative h-24 w-full bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 rounded-lg flex items-end justify-between px-2 pb-0 overflow-hidden" data-alt="Abstract bar chart showing growth">
+<!-- Decorative bars -->
+<div class="w-[10%] bg-primary/30 h-[40%] rounded-t-sm"></div>
+<div class="w-[10%] bg-primary/40 h-[55%] rounded-t-sm"></div>
+<div class="w-[10%] bg-primary/50 h-[35%] rounded-t-sm"></div>
+<div class="w-[10%] bg-primary/60 h-[70%] rounded-t-sm"></div>
+<div class="w-[10%] bg-primary/70 h-[60%] rounded-t-sm"></div>
+<div class="w-[10%] bg-primary/80 h-[85%] rounded-t-sm"></div>
+<div class="w-[10%] bg-primary h-[75%] rounded-t-sm"></div>
+</div>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-3 text-center">Performance is in top 10% of department</p>
+</div>
+</div>
+<!-- Right Column: Content Area -->
+<div class="col-span-1 lg:col-span-8 xl:col-span-9 flex flex-col gap-6">
+<!-- Tabs Header -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark px-6 pt-2">
+<div class="flex gap-8 overflow-x-auto no-scrollbar">
+<button class="group flex flex-col items-center justify-center border-b-[3px] border-primary text-primary pb-[13px] pt-4 min-w-fit px-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">overview</span>
+<span class="text-sm font-bold leading-normal tracking-[0.015em]">Overview</span>
+</div>
+</button>
+<button class="group flex flex-col items-center justify-center border-b-[3px] border-transparent text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-text-primary-dark pb-[13px] pt-4 min-w-fit px-2 transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">psychology</span>
+<span class="text-sm font-bold leading-normal tracking-[0.015em]">Skills</span>
+</div>
+</button>
+<button class="group flex flex-col items-center justify-center border-b-[3px] border-transparent text-text-secondary-light dark:text-text-secondary-dark hover:text-text-primary-light dark:hover:text-text-primary-dark pb-[13px] pt-4 min-w-fit px-2 transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] relative">
+                                    assignment 
+                                    <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+</span>
+</span>
+<span class="text-sm font-bold leading-normal tracking-[0.015em]">Current Tasks</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Overview Tab Content -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Productivity Gauge Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex flex-col items-center relative overflow-hidden xl:col-span-1">
+<div class="absolute top-4 right-4 text-primary/40">
+<span class="material-symbols-outlined text-[24px]" title="AI Generated Insight">auto_awesome</span>
+</div>
+<h3 class="text-base font-bold text-text-primary-light dark:text-text-primary-dark self-start mb-6">AI Productivity Score</h3>
+<div class="relative w-48 h-24 mb-4 flex justify-center overflow-hidden">
+<!-- Half Circle Gauge Background -->
+<div class="absolute w-48 h-48 rounded-full border-[12px] border-background-light dark:border-gray-800 top-0 box-border"></div>
+<!-- Half Circle Gauge Value -->
+<!-- Rotation calculated for roughly 92% -->
+<div class="absolute w-48 h-48 rounded-full border-[12px] border-primary border-b-transparent border-l-transparent border-r-transparent top-0 box-border origin-center rotate-[165deg]" style="clip-path: polygon(0 0, 100% 0, 100% 50%, 0 50%); transform: rotate(165deg);"></div>
+<div class="absolute bottom-0 flex flex-col items-center">
+<span class="text-3xl font-bold text-text-primary-light dark:text-text-primary-dark">92</span>
+<span class="text-xs font-medium text-green-500 uppercase tracking-wide">High</span>
+</div>
+</div>
+<p class="text-sm text-center text-text-secondary-light dark:text-text-secondary-dark px-4">
+                            Alex is performing <span class="text-green-600 dark:text-green-400 font-medium">12% above</span> average compared to peers in the same role.
+                        </p>
+</div>
+<!-- Key Stats Grid -->
+<div class="md:col-span-2 xl:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex items-start gap-4 hover:border-primary/30 transition-colors">
+<div class="p-3 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg">
+<span class="material-symbols-outlined text-[24px]">calendar_month</span>
+</div>
+<div>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">Years of Service</p>
+<p class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mt-1">3.5 Years</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">Joined Jan 2021</p>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex items-start gap-4 hover:border-primary/30 transition-colors">
+<div class="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+<span class="material-symbols-outlined text-[24px]">apartment</span>
+</div>
+<div>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">Department</p>
+<p class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mt-1">AI Research</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">Core Tech Division</p>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex items-start gap-4 hover:border-primary/30 transition-colors">
+<div class="p-3 bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 rounded-lg">
+<span class="material-symbols-outlined text-[24px]">supervisor_account</span>
+</div>
+<div>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">Reports To</p>
+<div class="flex items-center gap-2 mt-1">
+<div class="w-6 h-6 rounded-full bg-cover bg-center" data-alt="Small portrait of manager" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9OFxIVI-fYRCd2cn7F_iSmqtV_wI57zC0_XgFAQ854OrWgb2i4P4G6gw54qLmTZQBC_tGA4Hq0IjAeFpmb13co3-WoyBwdssQiIZlHvDDOGSUmZMLs2PANkXTzEyrHjnGzNus2E-4NEIFVEHt3aPLHEvfPfN8TIdyzq9VvfJYBmDfqCRF2P8YiXxqtACogSs6tV1J_zqRRy1zE58cMcMx45GaIEp-ga7K1tvnXl3gQbpWUVM-joC_rXawOyv6ceonyukWR5tWYtM');"></div>
+<p class="text-lg font-bold text-text-primary-light dark:text-text-primary-dark">Sarah Connor</p>
+</div>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">VP of Engineering</p>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex items-start gap-4 hover:border-primary/30 transition-colors">
+<div class="p-3 bg-teal-100 dark:bg-teal-900/30 text-teal-600 dark:text-teal-400 rounded-lg">
+<span class="material-symbols-outlined text-[24px]">verified</span>
+</div>
+<div>
+<p class="text-sm text-text-secondary-light dark:text-text-secondary-dark font-medium">Status</p>
+<p class="text-xl font-bold text-text-primary-light dark:text-text-primary-dark mt-1">Active</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark mt-1">Full-time Regular</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Skills & Tasks Row -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-6">
+<!-- Skills Section -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="text-lg font-bold text-text-primary-light dark:text-text-primary-dark">Skills Matrix</h3>
+<button class="text-primary text-sm font-medium hover:underline">View All</button>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-sm font-medium border border-blue-100 dark:border-blue-800">Python</span>
+<span class="px-3 py-1.5 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-sm font-medium border border-blue-100 dark:border-blue-800">TensorFlow</span>
+<span class="px-3 py-1.5 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 text-sm font-medium border border-blue-100 dark:border-blue-800">PyTorch</span>
+<span class="px-3 py-1.5 rounded-md bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm font-medium border border-green-100 dark:border-green-800">Leadership</span>
+<span class="px-3 py-1.5 rounded-md bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 text-sm font-medium border border-purple-100 dark:border-purple-800">Agile</span>
+<span class="px-3 py-1.5 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium border border-gray-200 dark:border-gray-700">Data Visualization</span>
+<span class="px-3 py-1.5 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium border border-gray-200 dark:border-gray-700">SQL</span>
+<span class="px-3 py-1.5 rounded-md bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-medium border border-gray-200 dark:border-gray-700">NLP</span>
+<span class="px-3 py-1.5 rounded-md border-dashed border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 text-sm flex items-center gap-1 cursor-pointer hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[16px]">add</span> Add Skill
+                            </span>
+</div>
+</div>
+<!-- Current Tasks Section -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark flex flex-col">
+<div class="p-4 border-b border-border-light dark:border-border-dark flex justify-between items-center">
+<h3 class="text-lg font-bold text-text-primary-light dark:text-text-primary-dark">Active Priorities</h3>
+<button class="bg-background-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-lg p-1.5 text-text-secondary-light hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto max-h-[250px] p-2">
+<!-- Task Item 1 -->
+<div class="p-3 hover:bg-background-light dark:hover:bg-gray-800/50 rounded-lg transition-colors group cursor-pointer flex items-center justify-between border border-transparent hover:border-border-light dark:hover:border-border-dark">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-red-500"></div>
+<div>
+<p class="text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Q3 Roadmap Analysis</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Due: Tomorrow, 5:00 PM</p>
+</div>
+</div>
+<span class="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs px-2 py-1 rounded font-medium">High</span>
+</div>
+<!-- Task Item 2 -->
+<div class="p-3 hover:bg-background-light dark:hover:bg-gray-800/50 rounded-lg transition-colors group cursor-pointer flex items-center justify-between border border-transparent hover:border-border-light dark:hover:border-border-dark">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-blue-500"></div>
+<div>
+<p class="text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Team Performance Review</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Due: Sep 15, 2024</p>
+</div>
+</div>
+<span class="bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs px-2 py-1 rounded font-medium">In Progress</span>
+</div>
+<!-- Task Item 3 -->
+<div class="p-3 hover:bg-background-light dark:hover:bg-gray-800/50 rounded-lg transition-colors group cursor-pointer flex items-center justify-between border border-transparent hover:border-border-light dark:hover:border-border-dark">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-gray-400"></div>
+<div>
+<p class="text-sm font-semibold text-text-primary-light dark:text-text-primary-dark">Update HR Documentation</p>
+<p class="text-xs text-text-secondary-light dark:text-text-secondary-dark">Due: Sep 20, 2024</p>
+</div>
+</div>
+<span class="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-xs px-2 py-1 rounded font-medium">Pending</span>
+</div>
+</div>
+<div class="p-3 border-t border-border-light dark:border-border-dark bg-background-light/30 dark:bg-background-dark/30 rounded-b-xl text-center">
+<a class="text-xs font-semibold text-primary hover:text-blue-700 transition-colors" href="#">View All Tasks (12)</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Organization Settings - Nexus HR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1c6bf2",
+                        "primary-content": "#ffffff",
+                        "primary-dark": "#1557c0",
+                        "primary-light": "#e8f0fe",
+                        "background-light": "#f8f9fc",
+                        "background-dark": "#101722",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e293b",
+                        "text-main": "#0f172a",
+                        "text-secondary": "#475569",
+                        "border-light": "#e2e8f0",
+                        "border-dark": "#334155",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px",
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-text-main font-display antialiased min-h-screen flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light bg-surface-light px-6 py-3 shadow-sm dark:border-border-dark dark:bg-surface-dark">
+<div class="flex items-center gap-4">
+<div class="flex h-8 w-8 items-center justify-center rounded bg-primary text-white">
+<span class="material-symbols-outlined text-xl">dataset</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight text-text-main dark:text-white">Nexus HR</h2>
+</div>
+<nav class="hidden md:flex flex-1 justify-center gap-8">
+<a class="text-text-secondary hover:text-primary text-sm font-medium transition-colors dark:text-slate-400 dark:hover:text-primary" href="#">Dashboard</a>
+<a class="text-text-secondary hover:text-primary text-sm font-medium transition-colors dark:text-slate-400 dark:hover:text-primary" href="#">Employees</a>
+<a class="text-text-secondary hover:text-primary text-sm font-medium transition-colors dark:text-slate-400 dark:hover:text-primary" href="#">Payroll</a>
+<a class="text-text-secondary hover:text-primary text-sm font-medium transition-colors dark:text-slate-400 dark:hover:text-primary" href="#">Reports</a>
+<a class="text-primary text-sm font-medium transition-colors" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-3">
+<button class="group flex h-9 w-9 items-center justify-center rounded-lg bg-background-light hover:bg-primary/10 text-text-secondary transition-colors dark:bg-slate-800 dark:text-slate-300">
+<span class="material-symbols-outlined group-hover:text-primary">notifications</span>
+</button>
+<button class="group flex h-9 w-9 items-center justify-center rounded-lg bg-background-light hover:bg-primary/10 text-text-secondary transition-colors dark:bg-slate-800 dark:text-slate-300">
+<span class="material-symbols-outlined group-hover:text-primary">chat</span>
+</button>
+<button class="group flex h-9 w-9 items-center justify-center rounded-lg bg-background-light hover:bg-primary/10 text-text-secondary transition-colors dark:bg-slate-800 dark:text-slate-300">
+<span class="material-symbols-outlined group-hover:text-primary">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Layout -->
+<div class="flex flex-1 flex-col md:flex-row max-w-7xl mx-auto w-full p-6 gap-8">
+<!-- Sidebar Navigation -->
+<aside class="w-full md:w-64 flex-shrink-0">
+<div class="sticky top-24">
+<div class="mb-6">
+<h1 class="text-lg font-semibold text-text-main dark:text-white">Settings</h1>
+<p class="text-sm text-text-secondary dark:text-slate-400">Manage organization preferences</p>
+</div>
+<nav class="flex flex-col gap-1">
+<a class="group flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2.5 text-sm font-medium text-primary dark:bg-primary/20 dark:text-primary-light" href="#">
+<span class="material-symbols-outlined text-[20px] fill-1">domain</span>
+                        General
+                    </a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background-light hover:text-text-main dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+                        Admin Controls
+                    </a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background-light hover:text-text-main dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">security</span>
+                        Security
+                    </a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background-light hover:text-text-main dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">extension</span>
+                        Integrations
+                    </a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-background-light hover:text-text-main dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                        Billing
+                    </a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 min-w-0">
+<!-- Breadcrumbs -->
+<div class="mb-6 flex items-center gap-2 text-sm text-text-secondary dark:text-slate-400">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Settings</a>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="font-medium text-text-main dark:text-white">Organization</span>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm">
+<!-- Card Header -->
+<div class="border-b border-border-light dark:border-border-dark px-6 py-5">
+<h2 class="text-xl font-bold text-text-main dark:text-white">General Information</h2>
+<p class="mt-1 text-sm text-text-secondary dark:text-slate-400">Update your organization's public profile and settings.</p>
+</div>
+<!-- Form Content -->
+<div class="p-6 space-y-8">
+<!-- Organization Branding -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-1">
+<h3 class="text-sm font-semibold text-text-main dark:text-white">Organization Logo</h3>
+<p class="text-xs text-text-secondary mt-1 dark:text-slate-400">This logo will be displayed on your invoices and public pages.</p>
+</div>
+<div class="md:col-span-2 flex items-center gap-6">
+<div class="h-20 w-20 shrink-0 overflow-hidden rounded-full border border-border-light dark:border-border-dark bg-background-light dark:bg-slate-800 relative group cursor-pointer">
+<img alt="Company Logo placeholder" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHepqiF3ts6yWQLkTqSNzBG_-n14oymWB0U0hQ871yNS09z520rtoK40O_YnVbXvLZ73CeexdQ2wlBqI18uYEUM1Cd9J8bLbfoFF_vuE5V0THnf9pL2gZ48ew7IAhcnQBHAoauNT7oBRodRsVnzYubpUGbJh0PBfcHFjNQkXpS7hyXr48xvRiX07Grh11nUmsbWemnag4Q5VsXi_MT-QBviCfeSNKgzAUrsAI4xDAhamcGiRjcDn_-fu78_yKKBNRdRUabXoOZZjw"/>
+<div class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white">edit</span>
+</div>
+</div>
+<div class="flex-1 space-y-2">
+<div class="flex gap-3">
+<button class="px-4 py-2 text-sm font-medium text-text-main bg-white border border-border-light rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:bg-slate-800 dark:border-border-dark dark:text-white dark:hover:bg-slate-700">Change Logo</button>
+<button class="px-4 py-2 text-sm font-medium text-red-600 bg-transparent hover:text-red-700 focus:outline-none dark:text-red-400">Remove</button>
+</div>
+<p class="text-xs text-text-secondary dark:text-slate-500">JPG, GIF or PNG. Max size of 800K.</p>
+</div>
+</div>
+</section>
+<hr class="border-border-light dark:border-border-dark"/>
+<!-- Basic Details -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-text-main dark:text-slate-200" for="companyName">Company Name</label>
+<input class="mt-1 block w-full rounded-lg border-border-light bg-background-light px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:border-border-dark dark:bg-slate-800 dark:text-white" id="companyName" type="text" value="Nexus Tech Innovations"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-main dark:text-slate-200" for="industry">Industry</label>
+<select class="mt-1 block w-full rounded-lg border-border-light bg-background-light px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:border-border-dark dark:bg-slate-800 dark:text-white" id="industry">
+<option>Technology</option>
+<option>Finance</option>
+<option>Healthcare</option>
+<option>Retail</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-main dark:text-slate-200" for="taxId">Tax ID / EIN</label>
+<input class="mt-1 block w-full rounded-lg border-border-light bg-background-light px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:border-border-dark dark:bg-slate-800 dark:text-white" id="taxId" placeholder="XX-XXXXXXX" type="text"/>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-text-main dark:text-slate-200" for="website">Website</label>
+<div class="mt-1 flex rounded-lg shadow-sm">
+<span class="inline-flex items-center rounded-l-lg border border-r-0 border-border-light bg-gray-50 px-3 text-sm text-gray-500 dark:border-border-dark dark:bg-slate-700 dark:text-slate-300">https://</span>
+<input class="block w-full flex-1 rounded-none rounded-r-lg border-border-light bg-background-light px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:border-border-dark dark:bg-slate-800 dark:text-white" id="website" type="text" value="nexushr.com"/>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-main dark:text-slate-200" for="email">Contact Email</label>
+<input class="mt-1 block w-full rounded-lg border-border-light bg-background-light px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:border-border-dark dark:bg-slate-800 dark:text-white" id="email" type="email" value="admin@nexushr.com"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-text-main dark:text-slate-200" for="currency">Default Currency</label>
+<select class="mt-1 block w-full rounded-lg border-border-light bg-background-light px-3 py-2 text-sm focus:border-primary focus:ring-primary dark:border-border-dark dark:bg-slate-800 dark:text-white" id="currency">
+<option>USD - US Dollar</option>
+<option>EUR - Euro</option>
+<option>GBP - British Pound</option>
+</select>
+</div>
+</div>
+</section>
+<hr class="border-border-light dark:border-border-dark"/>
+<!-- Wallet & Blockchain Settings (Special Feature) -->
+<section class="rounded-lg border border-primary/20 bg-primary/5 p-5 dark:border-primary/30 dark:bg-primary/10">
+<div class="flex items-start justify-between">
+<div class="flex gap-4">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-primary shadow-sm dark:bg-slate-800">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<div>
+<h3 class="text-base font-semibold text-text-main dark:text-white">Blockchain Wallet Connection</h3>
+<p class="text-sm text-text-secondary dark:text-slate-300 mt-1 max-w-xl">
+                                        Enable Web3 features for smart-contract based payroll and verified employee credentials. Connecting a wallet allows for instant crypto-settlements.
+                                    </p>
+</div>
+</div>
+<!-- Toggle Switch -->
+<div class="flex items-center">
+<button aria-checked="true" class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 bg-primary" role="switch" type="button">
+<span aria-hidden="true" class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+</button>
+<span class="ml-3 text-sm font-medium text-primary">Enabled</span>
+</div>
+</div>
+<!-- Active Wallet State -->
+<div class="mt-6 border-t border-primary/10 pt-4 dark:border-primary/20">
+<label class="block text-sm font-medium text-text-main dark:text-slate-200" for="walletAddress">Primary Wallet Address (Multisig Recommended)</label>
+<div class="mt-2 flex gap-3">
+<input class="block w-full flex-1 rounded-lg border-border-light bg-white px-3 py-2 text-sm font-mono text-text-secondary focus:border-primary focus:ring-primary dark:border-border-dark dark:bg-slate-800 dark:text-slate-300" id="walletAddress" readonly="" type="text" value="0x71C7656EC7ab88b098defB751B7401B5f6d8976F"/>
+<button class="shrink-0 rounded-lg bg-white px-4 py-2 text-sm font-medium text-text-secondary shadow-sm ring-1 ring-inset ring-border-light hover:bg-gray-50 dark:bg-slate-800 dark:text-slate-300 dark:ring-border-dark dark:hover:bg-slate-700">
+                                    Change Wallet
+                                </button>
+</div>
+<div class="mt-2 flex items-center gap-2 text-xs text-green-600 dark:text-green-400">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+<span>Wallet connected and verified on Ethereum Mainnet</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Footer Actions -->
+<div class="flex items-center justify-end gap-3 border-t border-border-light bg-gray-50 px-6 py-4 rounded-b-xl dark:border-border-dark dark:bg-slate-800/50">
+<button class="rounded-lg border border-border-light bg-white px-4 py-2 text-sm font-medium text-text-secondary shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:border-border-dark dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700" type="button">Cancel</button>
+<button class="inline-flex justify-center rounded-lg border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" type="button">Save Changes</button>
+</div>
+</div>
+</main>
+</div>
+</body></html>

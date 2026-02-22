@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI-HRMS Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1c6bf2",
+                        "primary-dark": "#1654c0",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-hidden">
+<div class="flex h-screen w-full overflow-hidden">
+<!-- Sidebar -->
+<aside class="hidden w-64 flex-col border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 lg:flex z-20">
+<div class="flex h-16 items-center px-6 border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-2">
+<div class="flex h-8 w-8 items-center justify-center rounded bg-primary text-white">
+<span class="material-symbols-outlined text-xl">dataset</span>
+</div>
+<div>
+<h1 class="text-base font-bold leading-none text-slate-900 dark:text-white">AI-HRMS</h1>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400">Admin Portal</p>
+</div>
+</div>
+</div>
+<div class="flex flex-1 flex-col justify-between overflow-y-auto p-4">
+<nav class="space-y-1">
+<a class="flex items-center gap-3 rounded-lg bg-primary/10 px-3 py-2.5 text-primary dark:text-blue-400" href="#">
+<span class="material-symbols-outlined filled">dashboard</span>
+<span class="text-sm font-medium">Dashboard</span>
+</a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300">group</span>
+<span class="text-sm font-medium">Employees</span>
+</a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300">task_alt</span>
+<span class="text-sm font-medium">Tasks</span>
+</a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-purple-500 dark:text-purple-400">auto_awesome</span>
+<span class="text-sm font-medium bg-gradient-to-r from-purple-600 to-primary bg-clip-text text-transparent font-semibold">AI Insights</span>
+</a>
+<a class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-slate-600 dark:text-slate-500 dark:group-hover:text-slate-300">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-100 dark:border-slate-800 pt-4">
+<button class="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-slate-600 hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors">
+<span class="material-symbols-outlined">logout</span>
+<span class="text-sm font-medium">Logout</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex flex-1 flex-col overflow-hidden">
+<!-- Header -->
+<header class="flex h-16 w-full items-center justify-between border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6 lg:px-8">
+<div class="flex items-center gap-4">
+<h2 class="text-lg font-bold text-slate-900 dark:text-white">Dashboard Overview</h2>
+</div>
+<div class="flex items-center gap-6">
+<!-- Search -->
+<div class="relative hidden w-64 md:block">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+<input class="h-10 w-full rounded-lg border-none bg-slate-100 pl-10 pr-4 text-sm text-slate-900 focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:text-white placeholder:text-slate-500" placeholder="Search employees, tasks..." type="text"/>
+</div>
+<div class="flex items-center gap-3 border-l border-slate-200 dark:border-slate-800 pl-6">
+<button class="relative rounded-full p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute right-2 top-2 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white dark:ring-slate-900"></span>
+</button>
+<div class="flex items-center gap-3 pl-2">
+<div class="h-9 w-9 overflow-hidden rounded-full border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800" data-alt="User profile avatar showing a professional person">
+<img alt="Profile" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfBwtHcwp0yojdjLtnATFn6xX6yqTK6zIs1MFAWDa4zJc8QhaAjpMcsZQXCXbY_QfaNeg4p4SCZNWGYyL0_C6Fl3BdWk1rmOh0gi2bImteWPS_VLsVY2zYSPg9IqhO7QknZLyac4DF-PmBDUZwAFPsvj0H1kx2OtmevzN7ON_Q_diwqhgXZkbzn7w_0p4HNm3osm7uZbceERN2gwK4zmBnATkOheyUq3RJIDpiuyNU9dA8VrdzBx5vMvvgShV-Ww69GK-8vZOGuyc"/>
+</div>
+<div class="hidden flex-col md:flex">
+<span class="text-sm font-semibold text-slate-900 dark:text-white">Thomas Anderson</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">HR Administrator</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-6 lg:p-8">
+<div class="mx-auto max-w-7xl flex flex-col gap-6">
+<!-- Stats Grid -->
+<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+<!-- Stat Card 1 -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Total Employees</p>
+<div class="rounded-md bg-blue-50 dark:bg-blue-900/30 p-2 text-primary dark:text-blue-400">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">1,240</span>
+<span class="flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                    12%
+                                </span>
+</div>
+<p class="mt-1 text-xs text-slate-400 dark:text-slate-500">vs last month</p>
+</div>
+<!-- Stat Card 2 -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Active Employees</p>
+<div class="rounded-md bg-indigo-50 dark:bg-indigo-900/30 p-2 text-indigo-600 dark:text-indigo-400">
+<span class="material-symbols-outlined text-[20px]">person_check</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">1,180</span>
+<span class="flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                    5%
+                                </span>
+</div>
+<p class="mt-1 text-xs text-slate-400 dark:text-slate-500">vs last month</p>
+</div>
+<!-- Stat Card 3 -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Assigned Tasks</p>
+<div class="rounded-md bg-amber-50 dark:bg-amber-900/30 p-2 text-amber-600 dark:text-amber-400">
+<span class="material-symbols-outlined text-[20px]">assignment</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">450</span>
+<span class="flex items-center text-xs font-medium text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_down</span>
+                                    2%
+                                </span>
+</div>
+<p class="mt-1 text-xs text-slate-400 dark:text-slate-500">vs last week</p>
+</div>
+<!-- Stat Card 4 -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 shadow-sm">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Completed Tasks</p>
+<div class="rounded-md bg-teal-50 dark:bg-teal-900/30 p-2 text-teal-600 dark:text-teal-400">
+<span class="material-symbols-outlined text-[20px]">task_alt</span>
+</div>
+</div>
+<div class="mt-4 flex items-baseline gap-2">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">320</span>
+<span class="flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px] mr-0.5">trending_up</span>
+                                    8%
+                                </span>
+</div>
+<p class="mt-1 text-xs text-slate-400 dark:text-slate-500">vs last week</p>
+</div>
+</div>
+<!-- Charts Row -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Productivity Trends Chart -->
+<div class="lg:col-span-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-base font-bold text-slate-900 dark:text-white">Productivity Trends</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-2xl font-bold text-slate-900 dark:text-white">85% Efficiency</span>
+<span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">+5% vs last month</span>
+</div>
+</div>
+<select class="bg-slate-50 border-slate-200 text-slate-600 text-sm rounded-lg focus:ring-primary focus:border-primary block p-2 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white">
+<option>Last 6 Months</option>
+<option>Last Year</option>
+</select>
+</div>
+<div class="relative h-64 w-full">
+<!-- Simulated Line Chart -->
+<svg class="h-full w-full overflow-visible" preserveaspectratio="none" viewbox="0 0 800 200">
+<!-- Grid lines -->
+<line class="dark:stroke-slate-700" stroke="#e2e8f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="0" y2="0"></line>
+<line class="dark:stroke-slate-700" stroke="#e2e8f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="50" y2="50"></line>
+<line class="dark:stroke-slate-700" stroke="#e2e8f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="100" y2="100"></line>
+<line class="dark:stroke-slate-700" stroke="#e2e8f0" stroke-dasharray="4 4" stroke-width="1" x1="0" x2="800" y1="150" y2="150"></line>
+<line class="dark:stroke-slate-700" stroke="#e2e8f0" stroke-width="1" x1="0" x2="800" y1="200" y2="200"></line>
+<!-- Chart Area Gradient -->
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#1c6bf2" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#1c6bf2" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Area Path -->
+<path d="M0 120 C 100 110, 150 140, 200 100 C 250 60, 300 80, 400 60 C 500 40, 600 70, 800 30 V 200 H 0 Z" fill="url(#chartGradient)"></path>
+<!-- Line Path -->
+<path d="M0 120 C 100 110, 150 140, 200 100 C 250 60, 300 80, 400 60 C 500 40, 600 70, 800 30" fill="none" stroke="#1c6bf2" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Points -->
+<circle class="fill-white stroke-primary stroke-2 dark:fill-slate-800" cx="200" cy="100" r="4"></circle>
+<circle class="fill-white stroke-primary stroke-2 dark:fill-slate-800" cx="400" cy="60" r="4"></circle>
+<circle class="fill-white stroke-primary stroke-2 dark:fill-slate-800" cx="800" cy="30" r="4"></circle>
+</svg>
+<!-- X Axis Labels -->
+<div class="flex justify-between mt-4 text-xs font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+<span>Jan</span>
+<span>Feb</span>
+<span>Mar</span>
+<span>Apr</span>
+<span>May</span>
+<span>Jun</span>
+</div>
+</div>
+</div>
+<!-- Department Distribution Chart -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-6 shadow-sm flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-base font-bold text-slate-900 dark:text-white">Department Headcount</h3>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Total distribution across teams</p>
+</div>
+<button class="text-slate-400 hover:text-primary dark:hover:text-primary-400">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="flex-1 flex items-end justify-between px-2 gap-4 h-64">
+<!-- Bar 1 -->
+<div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+<div class="relative w-full rounded-t-lg bg-indigo-50 dark:bg-indigo-900/20 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 transition-all overflow-hidden h-40">
+<div class="absolute bottom-0 w-full bg-primary h-[85%] rounded-t-lg"></div>
+</div>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Eng</span>
+</div>
+<!-- Bar 2 -->
+<div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+<div class="relative w-full rounded-t-lg bg-indigo-50 dark:bg-indigo-900/20 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 transition-all overflow-hidden h-40">
+<div class="absolute bottom-0 w-full bg-slate-300 dark:bg-slate-600 h-[65%] rounded-t-lg"></div>
+</div>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Sales</span>
+</div>
+<!-- Bar 3 -->
+<div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+<div class="relative w-full rounded-t-lg bg-indigo-50 dark:bg-indigo-900/20 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 transition-all overflow-hidden h-40">
+<div class="absolute bottom-0 w-full bg-slate-300 dark:bg-slate-600 h-[45%] rounded-t-lg"></div>
+</div>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-400">HR</span>
+</div>
+<!-- Bar 4 -->
+<div class="flex flex-col items-center gap-2 w-full group cursor-pointer">
+<div class="relative w-full rounded-t-lg bg-indigo-50 dark:bg-indigo-900/20 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/40 transition-all overflow-hidden h-40">
+<div class="absolute bottom-0 w-full bg-slate-300 dark:bg-slate-600 h-[55%] rounded-t-lg"></div>
+</div>
+<span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Mktg</span>
+</div>
+</div>
+<div class="mt-6 flex flex-col gap-3">
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="h-2.5 w-2.5 rounded-full bg-primary"></span>
+<span class="text-slate-600 dark:text-slate-400">Engineering</span>
+</div>
+<span class="font-semibold text-slate-900 dark:text-white">42%</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<div class="flex items-center gap-2">
+<span class="h-2.5 w-2.5 rounded-full bg-slate-300 dark:bg-slate-600"></span>
+<span class="text-slate-600 dark:text-slate-400">Others</span>
+</div>
+<span class="font-semibold text-slate-900 dark:text-white">58%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Section (Optional Bonus) -->
+<div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm overflow-hidden">
+<div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 px-6 py-4">
+<h3 class="text-base font-bold text-slate-900 dark:text-white">Recent Admin Activity</h3>
+<button class="text-sm font-medium text-primary hover:text-primary-dark dark:text-blue-400 dark:hover:text-blue-300">View All</button>
+</div>
+<div class="divide-y divide-slate-100 dark:divide-slate-700">
+<div class="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+</div>
+<div class="flex flex-1 items-center justify-between">
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">New employee onboarding initiated</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Added Sarah Miller to Engineering Dept</p>
+</div>
+<span class="text-xs text-slate-400 dark:text-slate-500">2 min ago</span>
+</div>
+</div>
+<div class="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400">
+<span class="material-symbols-outlined text-[20px]">auto_fix_high</span>
+</div>
+<div class="flex flex-1 items-center justify-between">
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">AI Performance Review Generated</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Q3 Analysis complete for Sales Team</p>
+</div>
+<span class="text-xs text-slate-400 dark:text-slate-500">1h ago</span>
+</div>
+</div>
+<div class="flex items-center gap-4 px-6 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+<div class="flex flex-1 items-center justify-between">
+<div>
+<p class="text-sm font-medium text-slate-900 dark:text-white">System Alert: Server Usage High</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Maintenance scheduled for 02:00 AM</p>
+</div>
+<span class="text-xs text-slate-400 dark:text-slate-500">3h ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
