@@ -1,4 +1,4 @@
-const { supabase } = require("../db");
+const { supabase, supabaseAdmin } = require("../db");
 
 const authenticateToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -16,7 +16,7 @@ const authenticateToken = async (req, res, next) => {
   }
 
   // Fetch role profile
-  const { data: profile } = await supabase
+  const { data: profile } = await supabaseAdmin
     .from("user_profiles")
     .select("*")
     .eq("id", user.id)
