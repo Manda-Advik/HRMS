@@ -1,10 +1,10 @@
-const { supabase } = require("../db");
+const { supabaseAdmin } = require("../db");
 
 // Admin: list all invitations for their org
 exports.getInvitations = async (req, res) => {
   try {
     const orgId = req.userProfile.org_id;
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from("invitations")
       .select("*")
       .eq("org_id", orgId)

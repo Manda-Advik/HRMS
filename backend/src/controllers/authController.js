@@ -141,7 +141,7 @@ const inviteEmployee = async (req, res) => {
     const invitedBy = req.user.id;
 
     // Check if already invited
-    const { data: existing } = await supabase
+    const { data: existing } = await supabaseAdmin
       .from("invitations")
       .select("id, status")
       .match({ org_id: orgId, email })
@@ -166,7 +166,7 @@ const inviteEmployee = async (req, res) => {
       return res.status(400).json({ error: inviteError.message });
 
     // Record the invitation
-    const { data: invitation, error: dbError } = await supabase
+    const { data: invitation, error: dbError } = await supabaseAdmin
       .from("invitations")
       .insert({
         org_id: orgId,
@@ -192,7 +192,7 @@ const completeInvite = async (req, res) => {
     const userEmail = req.user.email;
 
     // Find the pending invitation for this email
-    const { data: invitation, error: inviteError } = await supabase
+    const { data: invitation, error: inviteError } = await supabaseAdmin
       .from("invitations")
       .select("*")
       .eq("email", userEmail)
@@ -208,7 +208,7 @@ const completeInvite = async (req, res) => {
     const displayName = req.body.name || userEmail.split("@")[0];
 
     // Create employee record
-    const { data: employee, error: empError } = await supabase
+    const { data: employee, error: empError } = await supabaseAdmin
       .from("employees")
       .insert({
         org_id: orgId,
@@ -221,7 +221,7 @@ const completeInvite = async (req, res) => {
     if (empError) throw empError;
 
     // Create user_profile as employee
-    const { error: profileError } = await supabase
+    const { error: profileError } = await supabaseAdmin
       .from("user_profiles")
       .upsert({
         id: userId,
@@ -232,7 +232,7 @@ const completeInvite = async (req, res) => {
     if (profileError) throw profileError;
 
     // Mark invite as accepted
-    await supabase
+    await supabaseAdmin
       .from("invitations")
       .update({ status: "accepted" })
       .eq("id", invitation.id);
@@ -264,7 +264,7 @@ const updateProfile = async (req, res) => {
       preferred_domain,
     } = req.body;
 
-    const { data: profile, error } = await supabase
+    const { data: profile, error } = await supabaseAdmin
       .from("user_profiles")
       .update({
         full_name,

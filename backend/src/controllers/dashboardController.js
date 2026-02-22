@@ -1,16 +1,16 @@
-const { supabase } = require("../db");
+const { supabaseAdmin } = require("../db");
 
 exports.getMetrics = async (req, res) => {
   try {
     const orgId = req.userProfile?.org_id;
     if (!orgId) return res.status(403).json({ error: "No org context" });
 
-    const { count: totalEmployees } = await supabase
+    const { count: totalEmployees } = await supabaseAdmin
       .from("employees")
       .select("*", { count: "exact", head: true })
       .eq("org_id", orgId);
 
-    const { data: tasks, error: taskError } = await supabase
+    const { data: tasks, error: taskError } = await supabaseAdmin
       .from("tasks")
       .select("status")
       .eq("org_id", orgId);
@@ -24,7 +24,7 @@ exports.getMetrics = async (req, res) => {
     ).length;
     const assignedTasks = tasks.filter((t) => t.status === "Assigned").length;
 
-    const { data: topPerformers } = await supabase
+    const { data: topPerformers } = await supabaseAdmin
       .from("employees")
       .select("name, role, productivity_score")
       .eq("org_id", orgId)
