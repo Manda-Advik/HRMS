@@ -5,6 +5,12 @@ const SITE_URL = process.env.SITE_URL || "http://localhost:5173";
 // ── Admin registration ────────────────────────────────────────────────────────
 const register = async (req, res) => {
   try {
+    if (!supabaseAdmin) {
+      return res.status(500).json({ 
+        error: "Server Configuration Error: SUPABASE_SERVICE_ROLE_KEY is missing. Registration cannot bypass RLS." 
+      });
+    }
+
     const { name, email, password } = req.body;
     if (!name || !email || !password)
       return res
@@ -51,7 +57,7 @@ const register = async (req, res) => {
       return res.status(500).json({ error: "Failed to create user" });
 
     // Create org record — conflict on primary key (id) only
-    const { error: orgError } = await (supabaseAdmin || supabase)
+    const { error: orgError } = await supabaseAdmin
       .from("organizations")
       .upsert(
         { id: userId, name, email, password_hash: "managed_by_supabase_auth" },
@@ -65,7 +71,7 @@ const register = async (req, res) => {
     }
 
     // Create admin profile
-    const { error: profileError } = await (supabaseAdmin || supabase)
+    const { error: profileError } = await supabaseAdmin
       .from("user_profiles")
       .upsert(
         { id: userId, org_id: userId, role: "admin" },
