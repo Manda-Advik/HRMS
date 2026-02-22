@@ -5,21 +5,10 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// CORS — read allowed origins from env, fall back to localhost for dev
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173")
-  .split(",")
-  .map((o) => o.trim());
-
+// Simplified CORS: allow any origin to access the API since we rely on JWT Bearer tokens for security
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (curl, mobile apps, server-to-server)
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error(`CORS: origin ${origin} not allowed`));
-      }
-    },
+    origin: true, // Echoes back the request's origin automatically
     credentials: true,
   }),
 );
