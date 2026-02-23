@@ -1,9 +1,54 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import {
+  createWeb3Modal,
+  defaultConfig,
+  useWeb3ModalProvider,
+  useWeb3Modal,
+  useWeb3ModalAccount,
+} from "@web3modal/ethers/react";
+import { BrowserProvider } from "ethers";
 
 import BACKEND from "../api";
 
+// 1. Get projectId from WalletConnect Cloud
+const projectId =
+  import.meta.env.VITE_WALLET_CONNECT_PROJECT_ID ||
+  "eb9f844d299814ecd83cba8b91848026";
+
+// 2. Set provider metadata
+const metadata = {
+  name: "AI-HRMS",
+  description: "AI-HRMS Web3 Login",
+  url: "http://localhost:5173",
+  icons: ["https://avatars.mywebsite.com/"],
+};
+
+// 3. Create a config using default config
+const config = defaultConfig({
+  metadata,
+  enableEIP6963: true,
+  enableInjected: true,
+  enableCoinbase: true,
+  enableWalletConnect: true, // Explicitly enable WalletConnect QR
+});
+
+// 4. Create Web3Modal
+createWeb3Modal({
+  ethersConfig: config,
+  chains: [
+    {
+      chainId: 1,
+      name: "Ethereum",
+      currency: "ETH",
+      explorerUrl: "https://etherscan.io",
+      rpcUrl: "https://cloudflare-eth.com",
+    },
+  ],
+  projectId,
+});
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -11,7 +56,18 @@ const Login = () => {
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [isSigningWeb3, setIsSigningWeb3] = useState(false);
+  // Web3 onboarding — holds the session + role when a new wallet needs profile setup
+  const [web3Onboard, setWeb3Onboard] = useState(null); // { session, role }
+  const [onboardName, setOnboardName] = useState("");
+  const [onboardOrg, setOnboardOrg] = useState("");
+  // Guard: prevents personal_sign being called twice when multiple deps change at once
+  const signingInProgress = useRef(false);
   const navigate = useNavigate();
+  const { refreshProfile } = useAuth();
+  const { open } = useWeb3Modal();
+  const { walletProvider } = useWeb3ModalProvider();
+  const { address, isConnected } = useWeb3ModalAccount();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +92,9 @@ const Login = () => {
             const json = await res.json();
             role = json.profile?.role || null;
           }
-        } catch {}
+        } catch (err) {
+          console.debug("Failed to fetch profile during login", err);
+        }
 
         navigate(role === "employee" ? "/portal" : "/dashboard");
       } else {
@@ -68,6 +126,231 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  const handleWeb3ModalLaunch = async () => {
+    try {
+      setIsSigningWeb3(true);
+      await open();
+    } catch (err) {
+      console.error(err);
+      setError("Failed to open Web3 Modal");
+      setIsSigningWeb3(false);
+    }
+  };
+
+  // This hook runs whenever walletProvider changes (user connects a wallet)
+  useEffect(() => {
+    const handleLoginWithProvider = async () => {
+      // Must have provider, be connected, have an address selected, AND specifically be requesting sign-in
+      if (!walletProvider || !isConnected || !address || !isSigningWeb3) return;
+      // Prevent double-invocation: React may re-run the effect if multiple deps change at once
+      if (signingInProgress.current) return;
+      signingInProgress.current = true;
+
+      setError(null);
+      setLoading(true);
+
+      try {
+        await supabase.auth.getSession();
+
+        // Small delay to allow the WalletConnect connection modal to fully close
+        // before requesting personal_sign — prevents "request was aborted" race condition
+        await new Promise((resolve) => setTimeout(resolve, 800));
+
+        // 1. Build a proper EIP-4361 SIWE message — Supabase requires at least 6 lines
+        const domain = window.location.host; // e.g. "localhost:5173"
+        const uri = window.location.origin; // e.g. "http://localhost:5173"
+        const nonce = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
+        const issuedAt = new Date().toISOString();
+        const message = [
+          `${domain} wants you to sign in with your Ethereum account:`,
+          address,
+          ``,
+          `Sign in to AI-HRMS`,
+          ``,
+          `URI: ${uri}`,
+          `Version: 1`,
+          `Chain ID: 1`,
+          `Nonce: ${nonce}`,
+          `Issued At: ${issuedAt}`,
+        ].join("\n");
+
+        // Convert to hex for raw JSON-RPC
+        const hexMessage =
+          "0x" +
+          Array.from(new TextEncoder().encode(message))
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+
+        // 2. Request the user to cryptographically sign the message using raw WalletConnect Provider
+        const signature = await walletProvider.request({
+          method: "personal_sign",
+          params: [hexMessage, address],
+        });
+
+        // 3. Send the message + signature to our own backend for verification.
+        // The backend uses ethers.verifyMessage to confirm the wallet signed it,
+        // then creates/retrieves a Supabase user and returns a live session.
+        const resp = await fetch(`${BACKEND}/api/auth/web3-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ address, message, signature }),
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || "Web3 login failed");
+
+        // Set the session in the Supabase client so AuthContext picks it up
+        await supabase.auth.setSession({
+          access_token: data.session.access_token,
+          refresh_token: data.session.refresh_token,
+        });
+
+        if (data.isNewUser) {
+          // First time this wallet has logged in — collect name + org before redirecting
+          setWeb3Onboard({ session: data.session, role: data.profile?.role });
+        } else {
+          navigate(
+            data.profile?.role === "employee" ? "/portal" : "/dashboard",
+          );
+        }
+      } catch (err) {
+        setError(err.message || "Failed to sign in with Web3");
+      } finally {
+        signingInProgress.current = false;
+        setLoading(false);
+        setIsSigningWeb3(false);
+      }
+    };
+
+    handleLoginWithProvider();
+  }, [walletProvider, isConnected, address, isSigningWeb3, navigate]);
+
+  // Saves display name + org name for a brand-new Web3 user
+  const handleWeb3Onboard = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    try {
+      const res = await fetch(`${BACKEND}/api/auth/web3-onboard`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${web3Onboard.session.access_token}`,
+        },
+        body: JSON.stringify({ name: onboardName, org_name: onboardOrg }),
+      });
+      if (!res.ok) {
+        const d = await res.json();
+        throw new Error(d.error || "Failed to save profile");
+      }
+      // Refresh the cached profile in AuthContext so Navbar shows the new name immediately
+      if (refreshProfile) await refreshProfile();
+      navigate(web3Onboard.role === "employee" ? "/portal" : "/dashboard");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ── Web3 Onboarding Step (shown after new wallet connects) ───────────────────
+  if (web3Onboard) {
+    return (
+      <div className="bg-slate-50 dark:bg-slate-900 font-sans antialiased min-h-screen flex items-center justify-center p-4">
+        <div className="bg-white dark:bg-slate-800 shadow-xl rounded-2xl w-full max-w-md p-10">
+          <div className="flex items-center gap-2 mb-8 text-blue-600">
+            <span
+              className="material-symbols-outlined text-3xl"
+              style={{ fontFamily: "Material Symbols Outlined" }}
+            >
+              grid_view
+            </span>
+            <span className="text-xl font-bold text-slate-900 dark:text-white">
+              AI-HRMS
+            </span>
+          </div>
+
+          <div className="mb-6">
+            <div className="inline-flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 text-sm font-medium px-3 py-1.5 rounded-full mb-4">
+              <span
+                className="material-symbols-outlined text-[16px]"
+                style={{ fontFamily: "Material Symbols Outlined" }}
+              >
+                verified
+              </span>
+              Wallet verified
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+              One last step!
+            </h2>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
+              Tell us your name and organisation so we can set up your account.
+            </p>
+          </div>
+
+          <form onSubmit={handleWeb3Onboard} className="flex flex-col gap-5">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-slate-700 dark:text-slate-200 text-sm font-semibold">
+                Your Name
+              </span>
+              <div className="relative">
+                <span
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-[20px]"
+                  style={{ fontFamily: "Material Symbols Outlined" }}
+                >
+                  person
+                </span>
+                <input
+                  required
+                  type="text"
+                  value={onboardName}
+                  onChange={(e) => setOnboardName(e.target.value)}
+                  placeholder="Jane Smith"
+                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 h-12 pl-11 pr-4 text-base text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all"
+                />
+              </div>
+            </label>
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-slate-700 dark:text-slate-200 text-sm font-semibold">
+                Organisation Name
+              </span>
+              <div className="relative">
+                <span
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined text-[20px]"
+                  style={{ fontFamily: "Material Symbols Outlined" }}
+                >
+                  domain
+                </span>
+                <input
+                  required
+                  type="text"
+                  value={onboardOrg}
+                  onChange={(e) => setOnboardOrg(e.target.value)}
+                  placeholder="Acme Corp"
+                  className="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 h-12 pl-11 pr-4 text-base text-slate-900 dark:text-white placeholder:text-slate-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all"
+                />
+              </div>
+            </label>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-2 w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-base font-semibold rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+            >
+              {loading ? "Saving..." : "Get Started →"}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-slate-50 dark:bg-slate-900 font-sans antialiased text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
@@ -271,7 +554,23 @@ const Login = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3">
+                <button
+                  type="button"
+                  onClick={handleWeb3ModalLaunch}
+                  disabled={loading}
+                  className="flex items-center justify-center gap-2 h-11 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors text-sm font-medium text-slate-700 dark:text-slate-200 w-full disabled:opacity-50"
+                >
+                  <img
+                    alt="WalletConnect Logo"
+                    className="w-5 h-5 object-contain"
+                    src="https://walletconnect.com/favicon.ico"
+                  />
+                  Sign in with Web3 (WalletConnect)
+                </button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mt-3">
                 <button
                   type="button"
                   className="flex items-center justify-center gap-2 h-11 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors text-sm font-medium text-slate-700 dark:text-slate-200"

@@ -8,25 +8,27 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
+    const fetchDashboardData = async () => {
+      try {
+        const headers = {
+          Authorization: `Bearer ${session.access_token}`,
+        };
+
+        const res = await fetch(`${BACKEND}/api/dashboard/metrics`, {
+          headers,
+        });
+        if (res.ok) setMetrics(await res.json());
+      } catch (err) {
+        console.error("Failed to load dashboard data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user && session?.access_token) {
       fetchDashboardData();
     }
-  }, [user]);
-
-  const fetchDashboardData = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${session.access_token}`,
-      };
-
-      const res = await fetch(`${BACKEND}/api/dashboard/metrics`, { headers });
-      if (res.ok) setMetrics(await res.json());
-    } catch (err) {
-      console.error("Failed to load dashboard data:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user, session]);
 
   if (loading)
     return (

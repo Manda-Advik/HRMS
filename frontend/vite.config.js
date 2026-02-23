@@ -11,4 +11,17 @@ export default defineConfig({
       port: 5173,
     },
   },
+  customLogger: {
+    ...console,
+    warn: (msg, options) => {
+      // Silence Web3Modal/Coinbase "util" externalized warnings
+      if (msg.includes('Module "util" has been externalized')) return;
+      if (msg.includes('Lit is in dev mode')) return;
+      if (msg.includes('Multiple versions of Lit loaded')) return;
+    },
+    error: (msg, options) => {
+      // Route remaining errors to standard console
+      console.error(msg, options);
+    }
+  }
 });

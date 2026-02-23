@@ -31,6 +31,7 @@ const Invitations = () => {
 
   useEffect(() => {
     if (session) fetchInvitations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   const handleInvite = async (e) => {

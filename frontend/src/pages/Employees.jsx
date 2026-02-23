@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import BACKEND from "../api";
 
 const Employees = () => {
-  const { user, session } = useAuth();
+  const { session } = useAuth();
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -23,6 +23,7 @@ const Employees = () => {
 
   useEffect(() => {
     fetchEmployees();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   const fetchEmployees = async () => {

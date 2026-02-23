@@ -210,6 +210,43 @@ const Profile = () => {
                 </span>
                 Upload new picture
               </button>
+
+              {/* Read-only account info */}
+              <div className="w-full mt-4 space-y-3 text-left">
+                <div className="rounded-lg bg-slate-50 dark:bg-slate-800 px-4 py-3">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">
+                    Email
+                  </p>
+                  <p className="text-sm font-medium text-slate-800 dark:text-slate-100 truncate">
+                    {user?.email || "—"}
+                  </p>
+                </div>
+                <div className="rounded-lg bg-slate-50 dark:bg-slate-800 px-4 py-3">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">
+                    Role
+                  </p>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                      userProfile?.role === "admin"
+                        ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+                        : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                    }`}
+                  >
+                    {userProfile?.role || "employee"}
+                  </span>
+                </div>
+                {userProfile?.wallet_address && (
+                  <div className="rounded-lg bg-slate-50 dark:bg-slate-800 px-4 py-3">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">
+                      Wallet
+                    </p>
+                    <p className="text-xs font-mono text-slate-600 dark:text-slate-300 truncate">
+                      {userProfile.wallet_address.slice(0, 8)}...
+                      {userProfile.wallet_address.slice(-6)}
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

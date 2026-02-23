@@ -5,7 +5,7 @@ import { supabase } from "../supabaseClient";
 import BACKEND from "../api";
 
 const EmployeePortal = () => {
-  const { session, user, employeeId } = useAuth();
+  const { session, user } = useAuth();
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
@@ -31,6 +31,7 @@ const EmployeePortal = () => {
 
   useEffect(() => {
     if (session) fetchTasks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   const handleStatusChange = async (taskId, newStatus) => {

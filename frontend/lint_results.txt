@@ -1,0 +1,30 @@
+
+C:\coding\HRMS\frontend\src\context\AuthContext.jsx
+  139:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\coding\HRMS\frontend\src\pages\Dashboard.jsx
+  14:6  warning  React Hook useEffect has a missing dependency: 'fetchDashboardData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\coding\HRMS\frontend\src\pages\EmployeePortal.jsx
+   8:26  error    'employeeId' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                     no-unused-vars
+  34:6   warning  React Hook useEffect has a missing dependency: 'fetchTasks'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\coding\HRMS\frontend\src\pages\Employees.jsx
+   6:11  error    'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                               no-unused-vars
+  26:6   warning  React Hook useEffect has a missing dependency: 'fetchEmployees'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\coding\HRMS\frontend\src\pages\Invitations.jsx
+  34:6  warning  React Hook useEffect has a missing dependency: 'fetchInvitations'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\coding\HRMS\frontend\src\pages\Login.jsx
+   87:17  error  Empty block statement                                                                      no-empty
+  141:15  error  'nonceData' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  175:17  error  Empty block statement                                                                      no-empty
+
+C:\coding\HRMS\frontend\src\pages\Tasks.jsx
+   3:10  error    'supabase' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                               no-unused-vars
+   7:11  error    'user' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                          no-unused-vars
+  27:6   warning  React Hook useEffect has a missing dependency: 'fetchData'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 13 problems (8 errors, 5 warnings)
+

@@ -6,8 +6,9 @@ const SITE_URL = process.env.SITE_URL || "http://localhost:5173";
 const register = async (req, res) => {
   try {
     if (!supabaseAdmin) {
-      return res.status(500).json({ 
-        error: "Server Configuration Error: SUPABASE_SERVICE_ROLE_KEY is missing. Registration cannot bypass RLS." 
+      return res.status(500).json({
+        error:
+          "Server Configuration Error: SUPABASE_SERVICE_ROLE_KEY is missing. Registration cannot bypass RLS.",
       });
     }
 
@@ -293,6 +294,160 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// ── Web3 Onboarding — save name + org after first wallet login ────────────────
+const web3Onboard = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, org_name } = req.body;
+    if (!name || !org_name)
+      return res.status(400).json({ error: "name and org_name are required" });
+
+    // Save display name on user_profiles
+    await supabaseAdmin
+      .from("user_profiles")
+      .update({ full_name: name })
+      .eq("id", userId);
+
+    // Save org name on organizations (upsert in case row doesn't exist yet)
+    await supabaseAdmin
+      .from("organizations")
+      .upsert({ id: userId, name: org_name }, { onConflict: "id" });
+
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("web3Onboard error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// ── Web3 Wallet Login ─────────────────────────────────────────────────────────
+// Verifies a SIWE signature, then finds-or-creates a Supabase user keyed on
+// the wallet address stored in user_profiles (not a fragile email/password pair).
+const web3Login = async (req, res) => {
+  try {
+    const { address, message, signature } = req.body;
+    if (!address || !message || !signature) {
+      return res
+        .status(400)
+        .json({ error: "address, message, and signature are required" });
+    }
+
+    // 1. Verify the signature cryptographically
+    const { ethers } = require("ethers");
+    let recoveredAddress;
+    try {
+      recoveredAddress = ethers.verifyMessage(message, signature);
+    } catch {
+      return res.status(401).json({ error: "Invalid signature" });
+    }
+    if (recoveredAddress.toLowerCase() !== address.toLowerCase()) {
+      return res
+        .status(401)
+        .json({ error: "Signature does not match address" });
+    }
+
+    const walletAddr = address.toLowerCase();
+
+    // 2. Source of truth: check user_profiles for this wallet address
+    const { data: existingProfile } = await supabaseAdmin
+      .from("user_profiles")
+      .select("id, role, full_name")
+      .eq("wallet_address", walletAddr)
+      .single();
+
+    const walletEmail = `${walletAddr}@wallet.hrms.local`;
+    const walletPassword = ethers
+      .keccak256(
+        ethers.toUtf8Bytes(walletAddr + process.env.SUPABASE_SERVICE_ROLE_KEY),
+      )
+      .slice(0, 32);
+
+    if (existingProfile) {
+      // ── RETURNING USER ──────────────────────────────────────────────────────
+      // Refresh their auth password to current value (handles key rotation or
+      // first-time login after a backend restart) then sign them in.
+      await supabaseAdmin.auth.admin.updateUserById(existingProfile.id, {
+        password: walletPassword,
+        email_confirm: true,
+      });
+
+      const { data: signInData, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email: walletEmail,
+          password: walletPassword,
+        });
+
+      if (signInError || !signInData?.session) {
+        console.error("Web3 returning sign-in failed:", signInError?.message);
+        return res
+          .status(401)
+          .json({ error: "Failed to authenticate returning wallet" });
+      }
+
+      const isNewUser = !existingProfile.full_name;
+      return res.json({
+        session: signInData.session,
+        user: signInData.user,
+        profile: existingProfile,
+        isNewUser,
+      });
+    }
+
+    // ── NEW WALLET ──────────────────────────────────────────────────────────
+    if (!supabaseAdmin)
+      return res.status(500).json({ error: "Server configuration error" });
+
+    const { data: newUser, error: createError } =
+      await supabaseAdmin.auth.admin.createUser({
+        email: walletEmail,
+        password: walletPassword,
+        email_confirm: true,
+        user_metadata: {
+          wallet_address: address,
+          name: `${address.slice(0, 6)}...${address.slice(-4)}`,
+        },
+      });
+    if (createError)
+      return res.status(500).json({ error: createError.message });
+
+    // Create a profile row so the wallet is registered for future logins
+    // Web3 users who register their own org are admins by default
+    await supabaseAdmin
+      .from("user_profiles")
+      .upsert(
+        {
+          id: newUser.user.id,
+          org_id: newUser.user.id,
+          role: "admin",
+          wallet_address: walletAddr,
+        },
+        { onConflict: "id" },
+      );
+
+    // Sign in immediately to return a live session
+    const { data: freshSession, error: freshError } =
+      await supabase.auth.signInWithPassword({
+        email: walletEmail,
+        password: walletPassword,
+      });
+    if (freshError || !freshSession?.session) {
+      return res
+        .status(500)
+        .json({ error: "User created but sign-in failed. Please try again." });
+    }
+
+    return res.json({
+      session: freshSession.session,
+      user: freshSession.user,
+      profile: { role: "admin" },
+      isNewUser: true,
+    });
+  } catch (err) {
+    console.error("Web3 login error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 // ── Returns the calling user's profile ────────────────────────────────────────
 const getMe = async (req, res) => {
   res.json({ user: req.user, profile: req.userProfile });
@@ -301,6 +456,8 @@ const getMe = async (req, res) => {
 module.exports = {
   register,
   login,
+  web3Login,
+  web3Onboard,
   inviteEmployee,
   completeInvite,
   updateProfile,
