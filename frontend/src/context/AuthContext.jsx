@@ -109,12 +109,27 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  const refreshProfile = async () => {
+    if (session?.access_token) {
+      const profile = await fetchProfile(session.access_token);
+      setUserProfile(profile);
+    }
+  };
+
   const role = userProfile?.role || null;
   const employeeId = userProfile?.employee_id || null;
 
   return (
     <AuthContext.Provider
-      value={{ user, session, userProfile, role, employeeId, loading }}
+      value={{
+        user,
+        session,
+        userProfile,
+        role,
+        employeeId,
+        loading,
+        refreshProfile,
+      }}
     >
       {!loading && children}
     </AuthContext.Provider>
